@@ -1,10 +1,17 @@
 import { RecipeModel } from "../models/recipe.js";
 
-export const addRecipe = async (req, res) => {
-  // add recipe to databse
-  const createResult = await RecipeModel.create(req.body);
-  // return response
-  res.status(201).json(createResult);
+export const addRecipe = async (req, res, next) => {
+  try {
+    // add recipe to databse
+    const createResult = await RecipeModel.create({
+      ...req.body,
+      image: req.file.filename
+    });
+    // return response
+    res.status(201).json(createResult);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getRecipes = async (req, res, next) => {
